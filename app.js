@@ -7,14 +7,19 @@ const totalPmt = document.querySelector('#total-payment');
 const totalInt = document.querySelector('#total-interest');
 const loader = document.querySelector('#loading');
 const compounding = document.querySelectorAll('.form-check-input');
+const loanForm = document.querySelector('#loan-form');
 
 loader.style.display = 'none';
-calcBtn.addEventListener('click', () => {
+
+calcBtn.addEventListener('click', (e) => {
     loader.style.display = 'block';
+    
     setTimeout(() => {
-        loader.style.display = 'none';
+         loader.style.display = 'none';
     }, 1000);
+    
     calculate(loanAmount, interest, years, compounding);
+    e.preventDefault();
 });
 
 function calculate(principal, interest, term, formula) {
@@ -25,12 +30,21 @@ function calculate(principal, interest, term, formula) {
     let total1 = p * Math.pow((1 + (i / 12)), 12 * y);
     let total2 = p * Math.pow((1 + (i / 4)), 4 * y);
     let total3 = p * Math.pow((1 + i), y);
-            
-    if (compounding[0].checked) {
+    
+    if (!loanAmount.value) {
+        alert("You must choose a loan amout!");
+        
+    } else if (!interest.value) {
+        alert('You must choose an interest amount!');
+
+    } else if (!years.value) {
+        alert('You must choose a loan term!');
+
+    } else if (compounding[0].checked) {
         totalPmt.value = total0.toFixed(2);
         monthlyPmt.value = (total0 / y / 12).toFixed(2);
-        totalInt.value = (total0 - p).toFixed(2); 
-                
+        totalInt.value = (total0 - p).toFixed(2);
+        
     } else if (compounding[1].checked) {
         totalPmt.value = total1.toFixed(2);
         monthlyPmt.value = (total1 / y / 12).toFixed(2);
@@ -50,3 +64,4 @@ function calculate(principal, interest, term, formula) {
         alert('You must choose a compounding interval!');
     }
 }
+
