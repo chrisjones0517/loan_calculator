@@ -12,25 +12,25 @@ const loanForm = document.querySelector('#loan-form');
 loader.style.display = 'none';
 
 calcBtn.addEventListener('click', (e) => {
+    e.preventDefault();
     loader.style.display = 'block';
     
     setTimeout(() => {
          loader.style.display = 'none';
+         calculate(loanAmount, interest, years, compounding);
     }, 1000);
-    
-    calculate(loanAmount, interest, years, compounding);
-    e.preventDefault();
 });
 
 function calculate(principal, interest, term, formula) {
     let p = principal.value;
     let y = years.value;
     let i = interest.value / 100;
-    let total0 = p * Math.pow((Math.E), i * y);
-    let total1 = p * Math.pow((1 + (i / 12)), 12 * y);
-    let total2 = p * Math.pow((1 + (i / 4)), 4 * y);
-    let total3 = p * Math.pow((1 + i), y);
-    
+    let ei = i / 12; // interest rate divided over 12 months
+    let n = y * 12; // number of payments over loan term
+    let monthlyPayment = p / ((Math.pow((1 + ei), n) - 1) / (ei * Math.pow((1 + ei), n)));
+    let totalPayment = monthlyPayment * n;
+    let totalInterest = totalPayment - p;
+
     if (!loanAmount.value) {
         alert("You must choose a loan amout!");
         
@@ -40,28 +40,11 @@ function calculate(principal, interest, term, formula) {
     } else if (!years.value) {
         alert('You must choose a loan term!');
 
-    } else if (compounding[0].checked) {
-        totalPmt.value = total0.toFixed(2);
-        monthlyPmt.value = (total0 / y / 12).toFixed(2);
-        totalInt.value = (total0 - p).toFixed(2);
-        
-    } else if (compounding[1].checked) {
-        totalPmt.value = total1.toFixed(2);
-        monthlyPmt.value = (total1 / y / 12).toFixed(2);
-        totalInt.value = (total1 - p).toFixed(2); 
-        
-    } else if (compounding[2].checked) {
-        totalPmt.value = total2.toFixed(2);
-        monthlyPmt.value = (total2 / y / 12).toFixed(2);
-        totalInt.value = (total2 - p).toFixed(2); 
-        
-    } else if (compounding[3].checked) {
-        totalPmt.value = total3.toFixed(2);
-        monthlyPmt.value = (total3 / y / 12).toFixed(2);
-        totalInt.value = (total3 - p).toFixed(2); 
-        
     } else {
-        alert('You must choose a compounding interval!');
+        totalPmt.value = totalPayment.toFixed(2);
+        monthlyPmt.value = monthlyPayment.toFixed(2);
+        totalInt.value = totalInterest.toFixed(2);
     }
 }
+
 
