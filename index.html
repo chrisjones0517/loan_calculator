@@ -20,19 +20,19 @@
                         <div class="form-group">
                             <div class="input-group">
                                 <span class="input-group-text">$</span>
-                                <input type="number" class="form-control" id="amount" placeholder="Loan Amount">
+                                <input type="number" class="form-control" min="0" id="amount" placeholder="Loan Amount" step="1">
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="input-group">
                                 <span class="input-group-text">%</span>
-                                <input type="number" step="0.01" class="form-control" id="interest" placeholder="Interest">
+                                <input type="number" step="0.01" class="form-control" min="0" id="interest" placeholder="Interest">
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="input-group">
                                 <span class="input-group-text">Years</span>
-                                <input type="number" class="form-control" id="years" placeholder="Term of Loan">
+                                <input type="number" class="form-control" min="0" id="years" placeholder="Term of Loan">
                             </div>
                         </div>
                         <div class="form-group">
@@ -79,6 +79,26 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
             crossorigin="anonymous"></script>
         <script src="app.js"></script>
+        <script>
+
+            progressiveStep('#amount', 1);
+            progressiveStep('#interest', 0.01);
+
+            function progressiveStep(id, defaultStep) {
+                let amountInput = document.querySelector(id);
+                amountInput.addEventListener('mousedown', function () {
+
+                    let myStep = setInterval(function () {
+                        document.querySelector(id).getAttributeNode('step').value *= 2;
+                    }, 200);
+                    amountInput.addEventListener('mouseup', function () {
+                        clearInterval(myStep);
+                        document.querySelector(id).getAttributeNode('step').value = defaultStep;
+                    });
+                });
+            }
+
+        </script>
 </body>
 
 </html>

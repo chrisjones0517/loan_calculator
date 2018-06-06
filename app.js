@@ -47,4 +47,7 @@ function calculate(principal, interest, term, formula) {
     }
 }
 
+function progressiveStep() {
+    console.log('I ran');
+}
 
